@@ -132,6 +132,24 @@ Las contraseñas se guardan en la base de datos con BCrypt; aquí aparecen solo 
 
 Con la aplicación corriendo:
 
+### Demostración rápida (sin instalar k6)
+
+
+Con la aplicación corriendo, este comando usa k6 dentro de Docker y simula 100 usuarios a la vez durante 1 minuto, con los productos que ya existen:
+
+
+powershell
+docker run --rm -v "${PWD}\carga:/carga" -e BASE_URL=http://host.docker.internal:8080 grafana/k6 run /carga/demostracion.js
+
+
+Resultado obtenido en un portátil (13 de noviembre de 2026): 20.711 peticiones sin ningún error. El 95 % respondió en menos de 92 ms en el listado, 85 ms en el detalle y 84 ms en la búsqueda, frente a los límites de 2 s (RNF-01) y 2,5 s (RNF-02).
+
+
+![Resultado de la prueba de carga con 100 usuarios](docs/evidencias/prueba-carga.png)
+
+
+### Pruebas completas
+
 1. Carga 5.000 productos de prueba (solo en una base de pruebas):
 
    ```powershell
