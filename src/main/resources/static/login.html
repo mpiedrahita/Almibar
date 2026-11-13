@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · Almíbar</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <script type="module" src="js/login.js"></script>
+  <link rel="stylesheet" href="css/almibar.css">
+</head>
+<body>
+<main class="login">
+  <section class="login__glaseado" aria-labelledby="saludo">
+    <div class="login__panel">
+      <p class="marca login__marca">Almíbar</p>
+
+      <div class="login__contenido">
+        <h1 class="login__saludo" id="saludo">Hola de nuevo</h1>
+        <svg class="hilo" viewBox="0 0 160 24" aria-hidden="true"><path d="M4 16 C 20 4, 34 2, 30 10 C 26 18, 40 20, 58 8 C 70 0, 78 4, 72 12 C 66 20, 84 20, 104 8 C 116 1, 124 6, 118 13 C 112 20, 132 18, 156 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M12 21 C 50 9, 92 23, 150 11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></svg>
+        <p class="login__intro">Entra para organizar la vitrina de hoy.</p>
+
+        <form class="login__form" id="form-login" novalidate>
+          <div class="campo">
+            <label class="campo__etiqueta" for="usuario">Usuario</label>
+            <input class="campo__control" id="usuario" name="usuario" autocomplete="username" required aria-describedby="error-login">
+          </div>
+          <div class="campo">
+            <label class="campo__etiqueta" for="clave">Contraseña</label>
+            <div class="clave">
+              <input class="campo__control" id="clave" name="clave" type="password" autocomplete="current-password" required aria-describedby="error-login">
+              <button class="clave__mostrar" id="mostrar-clave" type="button" aria-label="Mostrar contraseña" aria-pressed="false">
+                <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-eye"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="campo__error" id="error-login" role="alert" hidden></p>
+          <button class="boton boton--principal login__entrar" id="boton-entrar" type="submit">Entrar</button>
+        </form>
+        <p class="login__nota">Para probar, usa <code>admin</code> o <code>consulta</code>. Las contraseñas están en el README.</p>
+      </div>
+    </div>
+    <svg class="login__goteo--abajo" viewBox="0 0 440 165" preserveAspectRatio="none" aria-hidden="true"><path fill="#FFFDF8" d="M0 0 H440 V34 Q433.5 38 427 34 C418 34 415.8 44.1 415.8 54.7 C415.8 64.4 418 64.8 418 72 A8 8 0 0 1 402 72 C402 64.8 404.2 64.4 404.2 54.7 C404.2 44.1 402 34 393 34 Q382.5 38 372 34 C363 34 359.9 56.9 359.9 80.8 C359.9 102.6 363 117.1 363 127 A11 11 0 0 1 341 127 C341 117.1 344.1 102.6 344.1 80.8 C344.1 56.9 341 34 332 34 Q319 38 306 34 C297 34 295 41.5 295 49.3 C295 56.4 297 54.7 297 61 A7 7 0 0 1 283 61 C283 54.7 285 56.4 285 49.3 C285 41.5 283 34 274 34 Q262.2 38 250.5 34 C241.5 34 238.8 49.8 238.8 66.4 C238.8 81.5 241.5 88 241.5 96.5 A9.5 9.5 0 0 1 222.5 96.5 C222.5 88 225.2 81.5 225.2 66.4 C225.2 49.8 222.5 34 213.5 34 Q201.2 38 189 34 C180 34 176.6 62.2 176.6 91.6 C176.6 118.5 180 139.2 180 150 A12 12 0 0 1 156 150 C156 139.2 159.4 118.5 159.4 91.6 C159.4 62.2 156 34 147 34 Q134.2 38 121.5 34 C112.5 34 110.1 46.8 110.1 60.1 C110.1 72.3 112.5 75.8 112.5 83.5 A8.5 8.5 0 0 1 95.5 83.5 C95.5 75.8 97.9 72.3 97.9 60.1 C97.9 46.8 95.5 34 86.5 34 Q74.5 38 62.5 34 C53.5 34 51.4 42.8 51.4 52 C51.4 60.4 53.5 59.8 53.5 66.5 A7.5 7.5 0 0 1 38.5 66.5 C38.5 59.8 40.6 60.4 40.6 52 C40.6 42.8 38.5 34 29.5 34 Q14.8 31 0 34 Z"/></svg>
+  </section>
+
+  <div class="login__goteo" aria-hidden="true"></div>
+  <img class="login__foto" src="img/alfajores-pistacho.webp" alt="Alfajores de pistacho bañados en chocolate blanco sobre una tabla de madera" width="1086" height="1448">
+</main>
+</body>
+</html>

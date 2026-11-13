@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vitrina · Almíbar</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/vendor/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="css/almibar.css">
+  <script type="module" src="js/vitrina.js"></script>
+</head>
+<body>
+<header class="barra">
+  <div class="barra__interior">
+    <a class="marca barra__marca" href="vitrina.html">Almíbar</a>
+    <div class="barra__usuario">
+      <span id="usuario-conectado"></span>
+      <button class="boton boton--texto" id="boton-salir" type="button">
+        <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-log-out"/></svg>Salir
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="vitrina">
+  <div class="vitrina__cabecera">
+    <div>
+      <h1 class="vitrina__titulo">La vitrina</h1>
+      <svg class="hilo" viewBox="0 0 160 24" aria-hidden="true"><path d="M4 16 C 20 4, 34 2, 30 10 C 26 18, 40 20, 58 8 C 70 0, 78 4, 72 12 C 66 20, 84 20, 104 8 C 116 1, 124 6, 118 13 C 112 20, 132 18, 156 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M12 21 C 50 9, 92 23, 150 11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></svg>
+      <p class="vitrina__descripcion">Lo que se ofrece hoy: precios, disponibilidad y qué sigue en la carta.</p>
+    </div>
+    <button class="boton boton--principal" id="boton-agregar" type="button" hidden>
+      <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-plus"/></svg>Agregar producto
+    </button>
+  </div>
+
+  <div class="estados" role="group" aria-label="Filtrar por estado">
+    <button class="estados__opcion" type="button" data-estado="todos" aria-pressed="true"><b data-conteo="total">–</b> Todos</button>
+    <button class="estados__opcion" type="button" data-estado="vitrina" aria-pressed="false"><b data-conteo="enVitrina">–</b> En vitrina</button>
+    <button class="estados__opcion" type="button" data-estado="agotados" aria-pressed="false"><b data-conteo="agotados">–</b> Agotados</button>
+    <button class="estados__opcion" type="button" data-estado="fuera" aria-pressed="false"><b data-conteo="fueraDeCarta">–</b> Fuera de carta</button>
+  </div>
+
+  <div class="filtros">
+    <label class="buscador">
+      <span class="sr-only">Buscar por nombre</span>
+      <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-search"/></svg>
+      <input class="campo__control" id="buscar" type="search" placeholder="Torta de zanahoria" autocomplete="off">
+    </label>
+    <div class="categorias" id="categorias" role="group" aria-label="Filtrar por categoría"></div>
+  </div>
+
+  <table class="lista" id="lista">
+    <caption class="sr-only">Productos de la vitrina</caption>
+    <thead>
+      <tr><th scope="col">Producto</th><th scope="col">Categoría</th><th scope="col" class="num">Precio</th><th scope="col">Disponibilidad</th><th scope="col"><span class="sr-only">Acciones</span></th></tr>
+    </thead>
+    <tbody id="filas" aria-live="polite" aria-busy="false"></tbody>
+  </table>
+  <div id="estado-lista"></div>
+
+  <nav class="paginacion" id="paginacion" aria-label="Paginación" hidden>
+    <span id="paginacion-texto"></span>
+    <div class="paginacion__paginas" id="paginacion-paginas"></div>
+  </nav>
+</main>
+
+<!-- Velo que oscurece la vitrina cuando hay un panel abierto -->
+<div class="velo" id="velo" hidden></div>
+
+<!-- Panel lateral: crear y editar productos -->
+<aside class="panel-lateral" id="panel-formulario" role="dialog" aria-modal="true" aria-labelledby="formulario-titulo" hidden>
+  <form id="form-producto" novalidate>
+    <div class="panel-lateral__cabecera">
+      <div>
+        <h2 class="panel-lateral__titulo" id="formulario-titulo">Agregar producto</h2>
+        <p class="panel-lateral__subtitulo">Los campos con <span class="campo__obligatorio" aria-hidden="true">*</span> son obligatorios.</p>
+      </div>
+      <button class="boton boton--icono" type="button" data-cerrar aria-label="Cerrar">
+        <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-x"/></svg>
+      </button>
+    </div>
+
+    <div class="panel-lateral__cuerpo">
+      <p class="aviso-error" id="formulario-error" role="alert" hidden></p>
+
+      <fieldset class="grupo">
+        <legend class="grupo__titulo">Lo básico</legend>
+        <div class="campo">
+          <div class="campo__fila">
+            <label class="campo__etiqueta" for="campo-nombre">Nombre<span class="campo__obligatorio" aria-hidden="true">*</span><span class="sr-only"> (obligatorio)</span></label>
+            <span class="campo__contador" id="contador-nombre">0 / 100</span>
+          </div>
+          <input class="campo__control" id="campo-nombre" name="nombre" maxlength="100" required aria-describedby="error-nombre" placeholder="Torta de zanahoria">
+          <p class="campo__error" id="error-nombre" hidden></p>
+        </div>
+        <div class="campo">
+          <div class="campo__fila">
+            <label class="campo__etiqueta" for="campo-descripcion">Descripción</label>
+            <span class="campo__contador" id="contador-descripcion">0 / 255</span>
+          </div>
+          <textarea class="campo__control" id="campo-descripcion" name="descripcion" maxlength="255" aria-describedby="ayuda-descripcion error-descripcion" placeholder="Bizcocho húmedo con nueces y crema de queso."></textarea>
+          <p class="campo__ayuda" id="ayuda-descripcion">Lo que verá quien toma el pedido: ingredientes, tamaño o porciones.</p>
+          <p class="campo__error" id="error-descripcion" hidden></p>
+        </div>
+      </fieldset>
+
+      <fieldset class="grupo">
+        <legend class="grupo__titulo">Venta</legend>
+        <div class="row g-3">
+          <div class="campo col-12 col-sm-6">
+            <label class="campo__etiqueta" for="campo-categoria">Categoría<span class="campo__obligatorio" aria-hidden="true">*</span><span class="sr-only"> (obligatorio)</span></label>
+            <select class="campo__control" id="campo-categoria" name="categoriaId" required aria-describedby="error-categoriaId">
+              <option value="">Elige una</option>
+            </select>
+            <p class="campo__error" id="error-categoriaId" hidden></p>
+          </div>
+          <div class="campo col-12 col-sm-6">
+            <label class="campo__etiqueta" for="campo-precio">Precio<span class="campo__obligatorio" aria-hidden="true">*</span><span class="sr-only"> (obligatorio)</span></label>
+            <div class="precio-campo">
+              <span class="precio-campo__signo" aria-hidden="true">$</span>
+              <input class="campo__control" id="campo-precio" name="precio" type="number" inputmode="decimal" min="0.01" step="0.01" required aria-describedby="ayuda-precio error-precio" placeholder="45000">
+            </div>
+            <p class="campo__ayuda" id="ayuda-precio">En pesos, sin puntos. Máximo dos decimales.</p>
+            <p class="campo__error" id="error-precio" hidden></p>
+          </div>
+        </div>
+        <div class="campo-interruptor">
+          <p><span class="campo__etiqueta" id="etiqueta-disponible">Disponible hoy</span><small id="ayuda-disponible">Apágalo si se agotó; el producto sigue en la carta.</small></p>
+          <button class="interruptor" id="campo-disponible" type="button" role="switch" aria-checked="true" aria-labelledby="etiqueta-disponible" aria-describedby="ayuda-disponible">
+            <span class="interruptor__riel"></span><span class="interruptor__texto">En vitrina</span>
+          </button>
+        </div>
+      </fieldset>
+
+      <fieldset class="grupo">
+        <legend class="grupo__titulo">Foto</legend>
+        <div class="foto-zona">
+          <div class="plato plato--grande plato--vacio" id="foto-vista" aria-hidden="true"></div>
+          <div class="foto-zona__acciones">
+            <label class="foto-zona__soltar" id="foto-soltar" for="campo-foto">
+              <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-image-up"/></svg>
+              <span id="foto-texto">Elige una foto o arrástrala aquí</span>
+            </label>
+            <input id="campo-foto" name="archivo" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ayuda-foto error-archivo">
+            <p class="campo__ayuda" id="ayuda-foto">JPG, PNG o WEBP de máximo 5 MB.</p>
+            <p class="campo__error" id="error-archivo" hidden></p>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="panel-lateral__pie">
+      <button class="boton boton--secundario" type="button" data-cerrar>Cancelar</button>
+      <button class="boton boton--principal" id="boton-guardar" type="submit">Guardar producto</button>
+    </div>
+  </form>
+</aside>
+
+<!-- Panel lateral: detalle de un producto -->
+<aside class="panel-lateral" id="panel-detalle" role="dialog" aria-modal="true" aria-labelledby="detalle-titulo" hidden>
+  <div class="panel-lateral__cabecera">
+    <div>
+      <h2 class="panel-lateral__titulo" id="detalle-titulo"></h2>
+      <p class="panel-lateral__subtitulo" id="detalle-categoria"></p>
+    </div>
+    <button class="boton boton--icono" type="button" data-cerrar aria-label="Cerrar">
+      <svg class="icono" aria-hidden="true"><use href="img/iconos.svg#i-x"/></svg>
+    </button>
+  </div>
+  <div class="panel-lateral__cuerpo" id="detalle-cuerpo"></div>
+  <div class="panel-lateral__pie" id="detalle-pie"></div>
+</aside>
+
+<!-- Confirmación antes de sacar un producto de la carta -->
+<dialog class="dialogo" id="dialogo-confirmar" aria-labelledby="confirmar-titulo" aria-describedby="confirmar-texto">
+  <div class="dialogo__contenido">
+    <h2 class="dialogo__titulo" id="confirmar-titulo"></h2>
+    <p class="dialogo__texto" id="confirmar-texto"></p>
+  </div>
+  <div class="dialogo__acciones">
+    <button class="boton boton--secundario" type="button" id="confirmar-cancelar">Cancelar</button>
+    <button class="boton boton--peligro" type="button" id="confirmar-aceptar">Sacar de la carta</button>
+  </div>
+</dialog>
+
+<div class="avisos" id="avisos" aria-live="polite" role="status"></div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Compilación
+target/
+*.class
+
+# Secretos y datos locales
+.env
+uploads/
+logs/
+respaldos/
+*.p12
+*.jks
+
+# Editores
+.idea/
+.vscode/
+*.iml
+.DS_Store
