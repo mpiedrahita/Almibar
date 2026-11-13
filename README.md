@@ -18,6 +18,7 @@ El documento técnico completo está en [`docs/ARQUITECTURA.md`](docs/ARQUITECTU
 | Seguridad | Spring Security + JWT (jjwt) + BCrypt |
 | Vista | HTML5, CSS3, JavaScript y la grilla de Bootstrap 5.3, con componentes y estilos propios |
 | Pruebas | JUnit 5, Mockito, MockMvc, Testcontainers, JaCoCo, k6 |
+| Documentación de la API | Swagger UI y OpenAPI 3 (springdoc-openapi 2.8) |
 | Herramientas | Maven (incluido con Maven Wrapper), Docker Compose, Lombok, Git |
 
 ---
@@ -88,6 +89,8 @@ La primera vez descarga las dependencias (puede tardar unos minutos). Flyway cre
 ### 5. Abrir la aplicación
 
 Entra a **http://localhost:8080** (te lleva al inicio de sesión).
+
+La documentación de la API (Swagger) está en **http://localhost:8080/swagger-ui.html**. Ver la sección [Documentación de la API](#documentación-de-la-api-swagger).
 
 ### Usuarios de prueba
 
@@ -227,7 +230,27 @@ Todas las respuestas de error tienen el mismo formato: `estado`, `error`, `mensa
 | GET | `/actuator/health` | Público | 200 |
 | GET | `/actuator/metrics` | ADMIN | 200 · 401 · 403 |
 
-La documentación formal con Swagger/OpenAPI y la colección de Postman las prepara otro integrante del equipo. Para Swagger basta con agregar la dependencia `org.springdoc:springdoc-openapi-starter-webmvc-ui` (versión 2.8.x, compatible con Spring Boot 3.5) y permitir `/swagger-ui/**` y `/v3/api-docs/**` en `SecurityConfig`.
+### Documentación de la API (Swagger)
+
+Con la aplicación corriendo:
+
+| Qué | URL |
+|---|---|
+| Swagger UI (documentación interactiva) | **http://localhost:8080/swagger-ui.html** |
+| Especificación OpenAPI en JSON | http://localhost:8080/v3/api-docs |
+
+Cada endpoint trae una descripción y ejemplos de petición y de respuesta, incluidos los errores (400, 401, 403, 404, 409, 413 y 422).
+
+**Cómo probar los endpoints desde Swagger:**
+
+1. Abre `POST /api/auth/login`, pulsa **Try it out** y ejecuta el ejemplo (`admin` / `Almibar.2026`).
+2. Copia el valor de `token` de la respuesta.
+3. Pulsa **Authorize** (arriba a la derecha), pega el token sin la palabra `Bearer` y confirma.
+4. Ya puedes ejecutar cualquier endpoint. Para ver el 403, inicia sesión con `consulta` / `Consulta.2026` e intenta crear un producto.
+
+**Regla de negocio en vivo:** ejecuta `PATCH /api/productos/8/disponibilidad` con `{"disponible": true}`. El producto 8 (Torta negra) está fuera de carta, así que la API responde **409** con el código `PRODUCTO_INACTIVO`.
+
+La documentación la genera **springdoc-openapi** a partir de los controladores y los DTO. Los títulos, el esquema de seguridad con token y los ejemplos están en `config/OpenApiConfig.java`, y el acceso público a la documentación en `security/config/SwaggerSecurityConfig.java`.
 
 ---
 

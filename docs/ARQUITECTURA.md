@@ -142,7 +142,7 @@ Estados de la evaluación: **Correcto**, **Precisado** (se le agregó detalle), 
 | Autenticación y seguridad | Spring Security + JWT (jjwt 0.12) + BCrypt | Lo define el documento |
 | Herramientas adicionales | Lombok, Maven (con Maven Wrapper), Git, GitHub, JUnit 5, Mockito, Testcontainers, JaCoCo, k6, Docker Compose | Cada una atiende un requisito concreto: construcción, control de versiones, pruebas (RNF-16), carga (RNF-01 a 04) y portabilidad (RNF-25) |
 
-**Fuera de este entregable, a propósito:** Swagger/OpenAPI y Postman, que los prepara otro integrante del equipo. Los endpoints quedan listos para documentarse (ver `README.md`).
+**Documentación de la API:** Swagger/OpenAPI con springdoc-openapi 2.8. Swagger UI en `http://localhost:8080/swagger-ui.html` y la especificación en `http://localhost:8080/v3/api-docs`, con ejemplos de petición y respuesta para cada endpoint (`config/OpenApiConfig.java`). Ver la sección *Documentación de la API* del `README.md`.
 
 ---
 
@@ -542,5 +542,4 @@ Cómo ejecutarlas: ver la sección *Pruebas* del `README.md`.
 - Los objetivos de rendimiento, escalabilidad y disponibilidad (RNF-01 a 05) quedan **preparados para medirse**; solo se pueden afirmar como cumplidos después de ejecutar las pruebas de carga en un servidor con características documentadas.
 - HTTPS (RNF-08) requiere un certificado real en producción; el perfil `prod` ya lo admite.
 - El almacenamiento en Cloudinary requiere una cuenta propia; por defecto se usa el almacenamiento local.
-- La documentación Swagger/OpenAPI y la colección de Postman las prepara otro integrante del equipo.
 - La gestión completa de categorías (crear, editar) y de usuarios queda fuera del alcance de este módulo.
