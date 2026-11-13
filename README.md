@@ -45,8 +45,8 @@ Los comandos están para **PowerShell en Windows**. En Linux o macOS, usa `cp` e
 ### 1. Clonar el proyecto
 
 ```powershell
-git clone https://github.com/811sg/reposteria-productos.git
-cd reposteria-productos
+git clone https://github.com/mpiedrahita/Almibar.git
+cd Almibar
 ```
 
 ### 2. Crear el archivo `.env`

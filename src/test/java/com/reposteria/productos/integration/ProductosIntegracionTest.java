@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -164,10 +164,13 @@ class ProductosIntegracionTest {
     void laBaseDeDatosProtegeLaRegla() throws Exception {
         long id = crear("Torta para restricción", true).get("id").asLong();
 
-        assertThatThrownBy(() -> jdbc.update("UPDATE producto SET activo = FALSE, disponibilidad = TRUE WHERE id_producto = ?", id))
-                .isInstanceOf(DataIntegrityViolationException.class);
-        assertThatThrownBy(() -> jdbc.update("UPDATE producto SET precio = 0 WHERE id_producto = ?", id))
-                .isInstanceOf(DataIntegrityViolationException.class);
+           // MySQL responde con el error 3819 (restricción CHECK); se verifica que sea la restricción correcta
+           assertThatThrownBy(() -> jdbc.update("UPDATE producto SET activo = FALSE, disponibilidad = TRUE WHERE id_producto = ?", id))
+                   .isInstanceOf(DataAccessException.class)
+                   .hasMessageContaining("chk_producto_inactivo_no_disponible");
+           assertThatThrownBy(() -> jdbc.update("UPDATE producto SET precio = 0 WHERE id_producto = ?", id))
+                   .isInstanceOf(DataAccessException.class)
+                   .hasMessageContaining("chk_producto_precio");
     }
 
     @Test
